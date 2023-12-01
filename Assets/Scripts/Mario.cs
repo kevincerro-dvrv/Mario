@@ -5,6 +5,7 @@ using UnityEngine;
 public class Mario : MonoBehaviour
 {
     private float speed = 3f;
+    private float brakingSpeed = 7f;
     private float jumpForce = 6.5f;
     private Vector3 velocity;
     private int movementDirection;
@@ -28,7 +29,12 @@ public class Mario : MonoBehaviour
             } else if (Input.GetKey(KeyCode.RightArrow) && movementDirection != -1) {
                 Walk(1);
             } else {
-                Walk(0);
+                if (Mathf.Abs(velocity.x) > 0.05f) {
+                    animator.SetBool("braking", true); 
+                    velocity.x -= movementDirection * brakingSpeed * Time.deltaTime;
+                } else {
+                    Walk(0);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Space)) {
@@ -39,10 +45,13 @@ public class Mario : MonoBehaviour
         transform.position = transform.position + velocity * Time.deltaTime;
     }
 
-    private void Walk(int movementDirection)
+    private void Walk(int direction)
     {
+        movementDirection = direction;
         velocity = Vector3.right * movementDirection * speed;
+        animator.SetBool("braking", false); 
 
+        // Control left and right
         if (movementDirection == 1 || movementDirection == -1) {
             animator.SetBool("walking", true); 
 
