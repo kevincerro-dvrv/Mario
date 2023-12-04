@@ -2,17 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turtle : MonoBehaviour
-{
+public class Turtle : MonoBehaviour {
+    private float speed = 1.8f;
+    private int movementDirection = 1;
+    private Vector3 velocity;
     // Start is called before the first frame update
-    void Start()
-    {
-        
+    void Start() {
+        if(transform.position.x > 0) {
+            movementDirection = -1;
+        }
+        velocity = Vector3.right * movementDirection *speed;
+        Vector3 newScale = transform.localScale;
+        newScale.x *= -movementDirection;
+        transform.localScale = newScale;
     }
 
     // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        Vector3 newPosition = transform.position;
+        newPosition += velocity * Time.deltaTime;
+        transform.position = newPosition;
         
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        
+        if(other.gameObject.CompareTag("Floor1PlatformEdge")) {
+            Vector3 newPosition = transform.position;
+            newPosition.x *= -1;
+            transform.position = newPosition;
+        }
+
+        if(other.gameObject.CompareTag("PipeEdge")) {
+            //Si detectamos el PipeEdge, tenemos que teletrasportarnos al punto de espaneo
+            if(transform.position.x > 0) {
+                //Si estamos a la derecha nos vamos al punto de espaneo derecho
+                transform.position = GameManager.instance.rightTurtleSpawnPoint.position;
+            } else {
+                transform.position = GameManager.instance.leftTurtleSpawnPoint.position;
+            }
+        }
+    }
+
+
+    void OnCollisionEnter2D(Collision2D other) {
+        Debug.Log("[Turtle.OnCollisionEnter2D]");
+
+        if(other.collider.gameObject.CompareTag("Turtle")) {
+            Debug.Log("[Turtle.OnCollisionEnter2D] colision de " + gameObject.name);
+            movementDirection *= -1;       
+            velocity = Vector3.right * movementDirection *speed;
+            Vector3 newScale = transform.localScale;
+            newScale.x = -movementDirection;
+            transform.localScale = newScale;
+        }
     }
 }
