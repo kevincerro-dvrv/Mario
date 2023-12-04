@@ -3,8 +3,8 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
     public Transform follow;
-    public float leftLimit = -2.8f;
-    public float rightLimit = 2.8f;
+    public float leftLimit = -4.3f;
+    public float rightLimit = 4.3f;
 
     // Start is called before the first frame update
     void Start()
