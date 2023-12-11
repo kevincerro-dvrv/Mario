@@ -15,6 +15,8 @@ public class Mario : MonoBehaviour {
     //Esta variable se pone a true al inicio del salto para protegerlo de la detección del suelo
     private bool takingOff;
 
+    private bool dying = false;
+
 
     // Start is called before the first frame update
     void Start() {
@@ -24,6 +26,10 @@ public class Mario : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (dying) {
+            return;
+        }
+
         if(IsGrounded()) {
             if(Input.GetKey(KeyCode.LeftArrow) && movementDirection != 1) {
                 Walk(-1);
@@ -95,5 +101,28 @@ public class Mario : MonoBehaviour {
 
     private void ResetTakingOff() {
         takingOff = false;
+    }
+
+    public void OnCollisionEnter2D(Collision2D other) {
+        if (other.gameObject.CompareTag("Turtle")) {
+            velocity = Vector3.zero;
+            dying = true;
+            animator.SetBool("shocking", true);
+
+            // Ponemos a Mario en la capa NoCollisions
+            gameObject.layer = LayerMask.NameToLayer("NoCollisions");
+            rb.gravityScale = 0f;
+
+            // Hacemos que Mario caiga
+            Invoke("FallingOver", 0.3f);
+
+            GameManager.instance.MarioDied();
+        }
+    }
+
+    public void FallingOver()
+    {
+        animator.SetBool("falling_over", true);
+        rb.gravityScale = 1f;
     }
 }

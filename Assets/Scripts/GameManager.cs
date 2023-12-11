@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     public Transform leftTurtleSpawnPoint;
     public Transform rightTurtleSpawnPoint;
     private int turtleCount;
+    private int lifesLeft = 3;
 
     public SpawnData[] spawnPlan = new SpawnData[] {
         new SpawnData(SpawnData.SpawnPoint.Right, 1.5f),
@@ -47,5 +48,10 @@ public class GameManager : MonoBehaviour {
         GameObject turtleGO = Instantiate(turtlePrefab, spawnPoint.position, Quaternion.identity);
         turtleGO.name = "Turtle_" + turtleCount;
         turtleCount++;
+    }
+
+    public void MarioDied()
+    {
+        lifesLeft--;
     }
 }
