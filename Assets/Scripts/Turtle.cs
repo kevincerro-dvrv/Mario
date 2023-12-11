@@ -41,6 +41,9 @@ public class Turtle : MonoBehaviour {
             } else {
                 transform.position = GameManager.instance.leftTurtleSpawnPoint.position;
             }
+
+            // Cambiamos la direccion de la tortuga
+            ChangeDirection();
         }
     }
 
@@ -50,11 +53,16 @@ public class Turtle : MonoBehaviour {
 
         if(other.collider.gameObject.CompareTag("Turtle")) {
             Debug.Log("[Turtle.OnCollisionEnter2D] colision de " + gameObject.name);
-            movementDirection *= -1;       
-            velocity = Vector3.right * movementDirection *speed;
-            Vector3 newScale = transform.localScale;
-            newScale.x = -movementDirection;
-            transform.localScale = newScale;
+            ChangeDirection();
         }
+    }
+
+    private void ChangeDirection()
+    {
+        movementDirection *= -1;
+        velocity = Vector3.right * movementDirection * speed;
+        Vector3 newScale = transform.localScale;
+        newScale.x = -movementDirection;
+        transform.localScale = newScale;
     }
 }
