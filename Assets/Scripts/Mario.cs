@@ -106,16 +106,21 @@ public class Mario : MonoBehaviour {
 
     public void OnCollisionEnter2D(Collision2D other) {
         if(other.gameObject.CompareTag("Turtle")) {
-            velocity = Vector3.zero;
-            dying = true;
-            animator.SetBool("shocking", true);
-            //Ponemos a Mario en la capa NoCollisions
-            gameObject.layer = LayerMask.NameToLayer("NoCollisions");
-            rb.gravityScale = 0f;
+            Turtle turtle = other.gameObject.GetComponent<Turtle>();
+            if(turtle.TurtleIsActive()) {
+                velocity = Vector3.zero;
+                dying = true;
+                animator.SetBool("shocking", true);
+                //Ponemos a Mario en la capa NoCollisions
+                gameObject.layer = LayerMask.NameToLayer("NoCollisions");
+                rb.gravityScale = 0f;
 
-            GameManager.instance.MarioDied();
+                GameManager.instance.MarioDied();
 
-            Invoke("FallingOver", 0.3f);
+                Invoke("FallingOver", 0.3f);
+            } else {
+                turtle.GetOffScene(transform.position);
+            }
         }
     }
 
