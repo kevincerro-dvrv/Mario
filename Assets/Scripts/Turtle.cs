@@ -6,6 +6,7 @@ public class Turtle : MonoBehaviour {
     private float speed = 1.8f;
     private int movementDirection = 1;
     private Vector3 velocity;
+
     private Animator animator;
 
     // Start is called before the first frame update
@@ -17,6 +18,11 @@ public class Turtle : MonoBehaviour {
         Vector3 newScale = transform.localScale;
         newScale.x *= -movementDirection;
         transform.localScale = newScale;
+
+        animator = GetComponent<Animator>();
+        if(animator == null) {
+            Debug.Log("[Turtle.Start] animator no encontrado");
+        }
     }
 
     // Update is called once per frame
@@ -43,14 +49,10 @@ public class Turtle : MonoBehaviour {
             } else {
                 transform.position = GameManager.instance.leftTurtleSpawnPoint.position;
             }
-
-            // Cambiamos la direccion de la tortuga
-            ChangeDirection();
         }
 
-        if (other.gameObject.CompareTag("Player")) {
+        if(other.gameObject.CompareTag("Player")) {
             velocity = Vector3.zero;
-            
         }
     }
 
@@ -61,28 +63,19 @@ public class Turtle : MonoBehaviour {
         if(other.collider.gameObject.CompareTag("Turtle")) {
             Debug.Log("[Turtle.OnCollisionEnter2D] colision de " + gameObject.name);
 
-            // Mientras gira la tortuga está parada
+            //Mientras gira la tortuga está parada
             velocity = Vector3.zero;
             animator.SetBool("turning", true);
+
         }
     }
 
-    public void RestartMovement()
-    {
-        ChangeDirection();
-        animator.SetBool("turning", false);
-    }
-
-    private void ChangeDirection()
-    {
-        movementDirection *= -1;
-
-        // Change object direction
+    public void RestartMovement() {
+        movementDirection *= -1;       
         velocity = Vector3.right * movementDirection * speed;
-
-        // Change sprite direction
         Vector3 newScale = transform.localScale;
         newScale.x = -movementDirection;
         transform.localScale = newScale;
+        animator.SetBool("turning", false);
     }
 }

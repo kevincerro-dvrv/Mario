@@ -15,6 +15,7 @@ public class Mario : MonoBehaviour {
     //Esta variable se pone a true al inicio del salto para protegerlo de la detección del suelo
     private bool takingOff;
 
+    //Variable que controla si Mario está en la animación de morir, en cuyo caso no se responde a las ordenes del jugador
     private bool dying = false;
 
 
@@ -26,7 +27,7 @@ public class Mario : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (dying) {
+        if(dying) {
             return;
         }
 
@@ -104,24 +105,21 @@ public class Mario : MonoBehaviour {
     }
 
     public void OnCollisionEnter2D(Collision2D other) {
-        if (other.gameObject.CompareTag("Turtle")) {
+        if(other.gameObject.CompareTag("Turtle")) {
             velocity = Vector3.zero;
             dying = true;
             animator.SetBool("shocking", true);
-
-            // Ponemos a Mario en la capa NoCollisions
+            //Ponemos a Mario en la capa NoCollisions
             gameObject.layer = LayerMask.NameToLayer("NoCollisions");
             rb.gravityScale = 0f;
 
-            // Hacemos que Mario caiga
-            Invoke("FallingOver", 0.3f);
-
             GameManager.instance.MarioDied();
+
+            Invoke("FallingOver", 0.3f);
         }
     }
 
-    public void FallingOver()
-    {
+    public void FallingOver() {
         animator.SetBool("falling_over", true);
         rb.gravityScale = 1f;
     }

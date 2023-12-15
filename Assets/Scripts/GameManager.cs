@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour {
     public Transform leftTurtleSpawnPoint;
     public Transform rightTurtleSpawnPoint;
     private int turtleCount;
-    private int lifesLeft = 3;
+    private int lifesLeft;
 
     public SpawnData[] spawnPlan = new SpawnData[] {
         new SpawnData(SpawnData.SpawnPoint.Right, 1.5f),
@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
+        lifesLeft = 3;
         StartCoroutine(SpawnCoroutine());
     }
 
@@ -50,8 +51,9 @@ public class GameManager : MonoBehaviour {
         turtleCount++;
     }
 
-    public void MarioDied()
-    {
+
+    public void MarioDied() {
         lifesLeft--;
+        Debug.Log("[GameManager] lifesLeft " + lifesLeft);
     }
 }
