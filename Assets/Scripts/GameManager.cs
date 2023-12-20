@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
+    public GameObject marioPrefab;
+    public Vector3 marioSpawnPoint;
     public GameObject turtlePrefab;
     public Transform leftTurtleSpawnPoint;
     public Transform rightTurtleSpawnPoint;
@@ -55,5 +57,16 @@ public class GameManager : MonoBehaviour {
     public void MarioDied() {
         lifesLeft--;
         Debug.Log("[GameManager] lifesLeft " + lifesLeft);
+
+        if (lifesLeft >= 0) {
+            Invoke("SpawnMario", 1.5f);
+        }
+    }
+
+    public void SpawnMario()
+    {
+        GameObject marioGO = Instantiate(marioPrefab, marioSpawnPoint, Quaternion.identity);
+        marioGO.GetComponent<Mario>().SpawnInitialization();
+        Camera.main.GetComponent<CameraMovement>().mario = marioGO.transform;
     }
 }

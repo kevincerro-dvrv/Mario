@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Camera : MonoBehaviour {
+public class CameraMovement : MonoBehaviour {
     public Transform mario;
     private float leftLimit = -4.3f;
     private float rightLimit = 4.3f;
@@ -13,8 +13,10 @@ public class Camera : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        Vector3 position = transform.position;
-        position.x = Mathf.Clamp(mario.position.x, leftLimit, rightLimit);
-        transform.position = position;
+        if (mario != null) {
+            Vector3 position = transform.position;
+            position.x = Mathf.Clamp(mario.position.x, leftLimit, rightLimit);
+            transform.position = position;
+        }
     }
 }
