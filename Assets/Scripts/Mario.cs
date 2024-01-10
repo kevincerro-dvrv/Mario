@@ -31,6 +31,8 @@ public class Mario : MonoBehaviour {
         rb = GetComponent<Rigidbody2D>();        
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        StartCoroutine(FireBlink());
     }
 
     // Update is called once per frame
@@ -167,6 +169,23 @@ public class Mario : MonoBehaviour {
             Color color = spriteRenderer.color;
             color.a = Util.MarioBlink(Time.time);
             spriteRenderer.color = color;
+            yield return null;
+        }
+    }
+
+    private IEnumerator FireBlink() {
+        if(spriteRenderer == null) {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+        while(true) {
+            Color color = spriteRenderer.color;
+            
+            if (Util.MarioFireBlink(Time.time) == 1) {
+                spriteRenderer.color = Color.white;
+            } else {
+                spriteRenderer.color = Color.red;
+            }
+
             yield return null;
         }
     }
