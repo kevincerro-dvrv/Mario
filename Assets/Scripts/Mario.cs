@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine; 
 
 public class Mario : MonoBehaviour {
-    private const float INMUNITY_TIME = 5f;
+    private const float INMUTY_TIME = 5f;
 
     private float speed = 3f;
     private float jumpForce = 6.5f;
@@ -20,26 +20,23 @@ public class Mario : MonoBehaviour {
     //Variable que controla si Mario está en la animación de morir, en cuyo caso no se responde a las ordenes del jugador
     private bool dying = false;
 
-    private bool inmune;
+    //Variable que concede inmunidad a Mario tras su espaneo
+    private bool inmune = false;
+
     private SpriteRenderer spriteRenderer;
     private Coroutine blinkCoroutine;
-
-
-    void Awake()
-    {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-    }
 
     // Start is called before the first frame update
     void Start() {
         rb = GetComponent<Rigidbody2D>();        
         animator = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update() {
         if(dying) {
-            if (transform.position.y < -10) {
+            if(transform.position.y < -10) {
                 Destroy(gameObject);
             }
             return;
@@ -122,7 +119,7 @@ public class Mario : MonoBehaviour {
         if(other.gameObject.CompareTag("Turtle")) {
             Turtle turtle = other.gameObject.GetComponent<Turtle>();
             if(turtle.TurtleIsActive()) {
-                if (!inmune) {
+                if( ! inmune) {
                     velocity = Vector3.zero;
                     dying = true;
                     animator.SetBool("shocking", true);
@@ -145,31 +142,33 @@ public class Mario : MonoBehaviour {
         rb.gravityScale = 1f;
     }
 
-    public void SpawnInitialization()
-    {
+
+    //Método llamado tras espanear a Mario para inicializar lo que sea necesario
+    public void SpawnInicialization() {
         inmune = true;
+        Invoke("EndInmunity", INMUTY_TIME);
         blinkCoroutine = StartCoroutine(Blink());
-        Invoke("EndInmunity", INMUNITY_TIME);
     }
 
-    public void EndInmunity()
-    {
+    private void EndInmunity() {
         inmune = false;
         StopCoroutine(blinkCoroutine);
+        Color color = spriteRenderer.color;
+        color.a = 1f;
+        spriteRenderer.color = color;
 
-        // Restore mario alpha
-        Color c = spriteRenderer.color;
-        c.a = 1f;
-        spriteRenderer.color = c;
     }
 
-    private IEnumerator Blink()
-    {
+    private IEnumerator Blink() {
+        if(spriteRenderer == null) {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+        }
         while(true) {
-            Color c = spriteRenderer.color;
-            c.a = Util.MarioBlink(Time.time);
-            spriteRenderer.color = c;
+            Color color = spriteRenderer.color;
+            color.a = Util.MarioBlink(Time.time);
+            spriteRenderer.color = color;
             yield return null;
         }
     }
 }
+

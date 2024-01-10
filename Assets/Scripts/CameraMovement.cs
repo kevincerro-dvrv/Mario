@@ -13,7 +13,7 @@ public class CameraMovement : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (mario != null) {
+        if(mario != null) {
             Vector3 position = transform.position;
             position.x = Mathf.Clamp(mario.position.x, leftLimit, rightLimit);
             transform.position = position;

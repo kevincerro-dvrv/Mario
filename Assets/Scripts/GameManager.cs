@@ -6,7 +6,9 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
     public GameObject marioPrefab;
-    public Vector3 marioSpawnPoint;
+    private Vector3 marioSpawnPoint;
+    
+
     public GameObject turtlePrefab;
     public Transform leftTurtleSpawnPoint;
     public Transform rightTurtleSpawnPoint;
@@ -26,8 +28,9 @@ public class GameManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        lifesLeft = 3;
+        lifesLeft = 4;
         StartCoroutine(SpawnCoroutine());
+        marioSpawnPoint = new Vector3(0f, 5f, 0f);
     }
 
     // Update is called once per frame
@@ -58,15 +61,14 @@ public class GameManager : MonoBehaviour {
         lifesLeft--;
         Debug.Log("[GameManager] lifesLeft " + lifesLeft);
 
-        if (lifesLeft >= 0) {
+        if(lifesLeft >= 0) {
             Invoke("SpawnMario", 1.5f);
         }
     }
 
-    public void SpawnMario()
-    {
+    private void SpawnMario() {
         GameObject marioGO = Instantiate(marioPrefab, marioSpawnPoint, Quaternion.identity);
-        marioGO.GetComponent<Mario>().SpawnInitialization();
+        marioGO.GetComponent<Mario>().SpawnInicialization();
         Camera.main.GetComponent<CameraMovement>().mario = marioGO.transform;
     }
 }
